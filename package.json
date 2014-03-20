@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "tape": "^2.10.2",
-    "jshint": "2.4.2",
+    "jshint": "~2.4.4",
     "istanbul": "~0.2.4",
     "tap-spec": "~0.1.4",
     "pre-commit": "0.0.4"
