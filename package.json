@@ -20,13 +20,15 @@
     "jshint": "~2.4.4",
     "istanbul": "~0.2.4",
     "tap-spec": "~0.1.4",
-    "pre-commit": "0.0.4"
+    "pre-commit": "0.0.4",
+    "coveralls": "~2.10.0"
   },
   "scripts": {
     "test": "npm run jshint && istanbul --print=none cover test/index.js | tspec && istanbul report text",
     "jshint": "jshint --verbose .",
     "cover": "istanbul cover --report none --print detail test/index.js",
-    "view-cover": "istanbul report html && open ./coverage/index.html"
+    "view-cover": "istanbul report html && open ./coverage/index.html",
+    "coveralls": "cat coverage/lcov.info | coveralls"
   },
   "engine": {
     "node": ">= 0.8.x"
