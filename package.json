@@ -1,0 +1,34 @@
+{
+  "name": "cache-dir",
+  "version": "1.0.0",
+  "description": "An ES6 map-like cache with file-based backing",
+  "keywords": [],
+  "author": "David Ellis <d.f.ellis@ieee.org>",
+  "repository": "git://github.com/uber/cache-dir.git",
+  "main": "index",
+  "homepage": "https://github.com/uber/cache-dir",
+  "bugs": {
+    "url": "https://github.com/uber/cache-dir/issues",
+    "email": "d.f.ellis@ieee.org"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "tape": "^2.10.2",
+    "jshint": "2.4.2",
+    "istanbul": "~0.2.4",
+    "tap-spec": "~0.1.4",
+    "pre-commit": "0.0.4"
+  },
+  "scripts": {
+    "test": "npm run jshint && istanbul --print=none cover test/index.js | tspec && istanbul report text",
+    "jshint": "jshint --verbose .",
+    "cover": "istanbul cover --report none --print detail test/index.js",
+    "view-cover": "istanbul report html && open ./coverage/index.html"
+  },
+  "engine": {
+    "node": ">= 0.8.x"
+  },
+  "private": true,
+  "uber-ngen-version": "2.0.2"
+}
