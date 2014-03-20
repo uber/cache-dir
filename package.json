@@ -12,6 +12,8 @@
     "email": "d.f.ellis@ieee.org"
   },
   "dependencies": {
+    "async": "~0.2.10",
+    "mkdirp": "~0.3.5"
   },
   "devDependencies": {
     "tape": "^2.10.2",
