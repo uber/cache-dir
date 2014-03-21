@@ -1,4 +1,4 @@
-[![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges) [![NPM version](https://badge.fury.io/js/cache-dir.png)](http://badge.fury.io/js/cache-dir) [![Build Status](https://travis-ci.org/uber/cache-dir.svg?branch=master)](https://travis-ci.org/uber/cache-dir) [![Coverage Status](http://coveralls.io/repos/uber/cache-dir/badge.png?branch=add-coveralls-support)](http://coveralls.io/r/uber/cache-dir?branch=add-coveralls-support) [![Dependency Status](https://gemnasium.com/uber/cache-dir.svg)](https://gemnasium.com/uber/cache-dir)
+[![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges) [![NPM version](https://badge.fury.io/js/cache-dir.png)](http://badge.fury.io/js/cache-dir) [![Build Status](https://travis-ci.org/uber/cache-dir.svg?branch=master)](https://travis-ci.org/uber/cache-dir) [![Coverage Status](http://coveralls.io/repos/uber/cache-dir/badge.png?branch=master)](http://coveralls.io/r/uber/cache-dir?branch=master) [![Dependency Status](https://gemnasium.com/uber/cache-dir.svg)](https://gemnasium.com/uber/cache-dir)
 
 # cache-dir
 
