@@ -19,19 +19,23 @@ function CacheDir(config) {
     }
 }
 
+CacheDir.prototype.keyPath = function(key) {
+    return path.join(this.dir, this.namespace, key);
+};
+
 CacheDir.prototype.setSync = function(key, val) {
     this.cache[key] = val;
-    fs.writeFileSync(path.join(this.dir, this.namespace, key), JSON.stringify(val));
+    fs.writeFileSync(this.keyPath(key), JSON.stringify(val));
 };
 
 CacheDir.prototype.set = function(key, val, callback) {
     this.cache[key] = val;
-    fs.writeFile(path.join(this.dir, this.namespace, key), JSON.stringify(val), callback);
+    fs.writeFile(this.keyPath(key), JSON.stringify(val), callback);
 };
 
 CacheDir.prototype.getSync = function(key) {
     if (this.cache.hasOwnProperty(key)) return this.cache[key];
-    var source = path.join(this.dir, this.namespace, key);
+    var source = this.keyPath(key);
     if (fs.existsSync(source)) {
         try {
             this.cache[key] = JSON.parse(fs.readFileSync(source, 'utf8'));
@@ -44,7 +48,7 @@ CacheDir.prototype.getSync = function(key) {
 
 CacheDir.prototype.get = function(key, callback) {
     if (this.cache.hasOwnProperty(key)) return process.nextTick(callback.bind(this, null, this.cache[key]));
-    var source = path.join(this.dir, this.namespace, key);
+    var source = this.keyPath(key);
     fs.exists(source, function(exists) {
         if (!exists) return callback();
         fs.readFile(source, 'utf8', function(err, result) {
@@ -76,7 +80,7 @@ CacheDir.prototype.values = function(callback) {
     fs.readdir(path.join(this.dir, this.namespace), function(err, keys) {
         if (err) return callback(err);
         async.map(keys, function(key, next) {
-            fs.readFile(path.join(this.dir, this.namespace, key), 'utf8', function(err, val) {
+            fs.readFile(this.keyPath(key), 'utf8', function(err, val) {
                 if (err) return next(err);
                 next(null, JSON.parse(val));
             });
@@ -84,6 +88,18 @@ CacheDir.prototype.values = function(callback) {
     }.bind(this));
 };
 
-// TODO: Add other ES6 Map methods: items, has, forEach, iterator, delete, clear, toString, and the property size
+CacheDir.prototype.has = function(key, callback) {
+    if (this.cache.hasOwnProperty(key)) {
+        process.nextTick(callback.bind(this, true));
+    } else {
+        fs.exists(this.keyPath(key), callback);
+    }
+};
+
+CacheDir.prototype.hasSync = function(key) {
+    return this.cache.hasOwnProperty(key) || fs.existsSync(this.keyPath(key));
+};
+
+// TODO: Add other ES6 Map methods: items, forEach, iterator, delete, clear, toString, and the property size
 
 module.exports = CacheDir;
