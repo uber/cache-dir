@@ -200,6 +200,26 @@ test('valuesReadFileFailure', mutate(fs, 'readFile', function(path, mode, callba
     });
 }));
 
+test('has', function(assert) {
+    assert.plan(2);
+    var cache = createCache();
+    cache.has('foo', function(has) {
+        assert.equal(has, true, 'has that key');
+        cache.has('lolno', function(has) {
+            assert.equal(has, false, 'does not have that key');
+            assert.end();
+        });
+    });
+});
+
+test('hasSync', function(assert) {
+    assert.plan(2);
+    var cache = createCache();
+    assert.equal(cache.hasSync('foo'), true, 'has that key');
+    assert.equal(cache.hasSync('lolno'), false, 'does not have that key');
+    assert.end();
+});
+
 test('clearAgain', function (assert) {
     exec('rm -rf ' + path.join(__dirname, 'cacheTest'), function() {
         assert.end();
