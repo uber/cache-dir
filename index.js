@@ -14,7 +14,7 @@ function CacheDir(config) {
         mkdirp(namespacedDir);
     } else if (!this.lazy) {
         fs.readdirSync(namespacedDir).forEach(function(file) {
-            this.getSync(file);
+            this.cache[file] = JSON.parse(fs.readFileSync(this.keyPath(file), 'utf8'));
         }.bind(this));
     }
 }
@@ -23,26 +23,12 @@ CacheDir.prototype.keyPath = function(key) {
     return path.join(this.dir, this.namespace, key);
 };
 
-CacheDir.prototype.setSync = function(key, val) {
-    this.cache[key] = val;
-    fs.writeFileSync(this.keyPath(key), JSON.stringify(val));
-};
-
 CacheDir.prototype.set = function(key, val, callback) {
     this.cache[key] = val;
     fs.writeFile(this.keyPath(key), JSON.stringify(val), callback);
 };
 
-CacheDir.prototype.getSync = function(key) {
-    if (this.cache.hasOwnProperty(key)) return this.cache[key];
-    var source = this.keyPath(key);
-    if (fs.existsSync(source)) {
-        try {
-            this.cache[key] = JSON.parse(fs.readFileSync(source, 'utf8'));
-        } catch (e) {
-            fs.unlinkSync(source);
-        }
-    }
+CacheDir.prototype.getLocal = function(key) {
     return this.cache[key];
 };
 
@@ -64,7 +50,7 @@ CacheDir.prototype.get = function(key, callback) {
     }.bind(this));
 };
 
-CacheDir.prototype.keysSync = function() {
+CacheDir.prototype.keysLocal = function() {
     return Object.keys(this.cache);
 };
 
@@ -72,7 +58,7 @@ CacheDir.prototype.keys = function(callback) {
     fs.readdir(path.join(this.dir, this.namespace), callback);
 };
 
-CacheDir.prototype.valuesSync = function() {
+CacheDir.prototype.valuesLocal = function() {
     return Object.keys(this.cache).map(function(key) { return this.cache[key]; }.bind(this));
 };
 
@@ -96,8 +82,8 @@ CacheDir.prototype.has = function(key, callback) {
     }
 };
 
-CacheDir.prototype.hasSync = function(key) {
-    return this.cache.hasOwnProperty(key) || fs.existsSync(this.keyPath(key));
+CacheDir.prototype.hasLocal = function(key) {
+    return this.cache.hasOwnProperty(key);
 };
 
 // TODO: Add other ES6 Map methods: items, forEach, iterator, delete, clear, toString, and the property size
