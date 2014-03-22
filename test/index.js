@@ -31,49 +31,32 @@ test('initialize', function (assert) {
     assert.end();
 });
 
-test('setSync', function (assert) {
-    assert.plan(2);
-    var cache = createCache();
-    cache.setSync('foo', 'bar');
-    assert.ok(fs.existsSync(makePath('foo')), 'key written to disk');
-    assert.equal(JSON.parse(fs.readFileSync(makePath('foo'), 'utf8')), cache.cache.foo, 'written value matches memory');
-    assert.end();
-});
-
 test('set', function (assert) {
-    assert.plan(2);
+    assert.plan(3);
     var cache = createCache();
+    assert.doesNotThrow(function() {
+        cache.set('foo', 'bar');
+    }, 'can set fire and forget');
     cache.set('foo2', 'bar2', function() {
         assert.ok(fs.existsSync(makePath('foo2')), 'key written to disk');
         assert.equal(JSON.parse(fs.readFileSync(makePath('foo2'), 'utf8')), cache.cache.foo2, 'written value matches memory');
         assert.end();
     });
 });
-    
 
-test('getSync', function (assert) {
+test('getLocal', function (assert) {
     assert.plan(1);
     var cache = createCache();
-    var val = cache.getSync('foo');
+    var val = cache.getLocal('foo');
     assert.equal(val, 'bar', 'got the expected value even from a separate constructor obj');
     assert.end();
 });
 
-test('get sync non existent', function (assert) {
+test('getLocal non existent', function (assert) {
     assert.plan(1);
     var cache = createCache();
-    var val = cache.getSync('nonexistent');
+    var val = cache.getLocal('nonexistent');
     assert.equal(val, undefined, 'got the expected undefined value for a nonexistent key');
-    assert.end();
-});
-
-test('get sync garbled file', function (assert) {
-    assert.plan(2);
-    var cache = createCache();
-    fs.writeFileSync(path.join(__dirname, 'cacheTest', 'garbled'), 'lol{json}');
-    var val = cache.getSync('garbled');
-    assert.equal(val, undefined, 'garbled data is also returned as undefined');
-    assert.ok(!fs.existsSync(path.join(__dirname, 'cacheTest', 'garbled')), 'garbled was deleted');
     assert.end();
 });
 
@@ -140,10 +123,10 @@ test('get fs failure', mutate(fs, 'readFile', function (source, mode, callback) 
     });
 }));
 
-test('keys sync', function (assert) {
+test('keysLocal', function (assert) {
     assert.plan(1);
     var cache = createCache();
-    assert.deepEqual(cache.keysSync().sort(), ['foo', 'foo2'], 'got both keys');
+    assert.deepEqual(cache.keysLocal().sort(), ['foo', 'foo2'], 'got both keys');
     assert.end();
 });
 
@@ -156,10 +139,10 @@ test('keys', function (assert) {
     });
 });
 
-test('valuesSync', function (assert) {
+test('valuesLocal', function (assert) {
     assert.plan(1);
     var cache = createCache();
-    assert.deepEqual(cache.valuesSync().sort(), ['bar', 'bar2'], 'got both values');
+    assert.deepEqual(cache.valuesLocal().sort(), ['bar', 'bar2'], 'got both values');
     assert.end();
 });
 
@@ -212,11 +195,11 @@ test('has', function(assert) {
     });
 });
 
-test('hasSync', function(assert) {
+test('hasLocal', function(assert) {
     assert.plan(2);
     var cache = createCache();
-    assert.equal(cache.hasSync('foo'), true, 'has that key');
-    assert.equal(cache.hasSync('lolno'), false, 'does not have that key');
+    assert.equal(cache.hasLocal('foo'), true, 'has that key');
+    assert.equal(cache.hasLocal('lolno'), false, 'does not have that key');
     assert.end();
 });
 
