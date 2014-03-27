@@ -86,6 +86,22 @@ CacheDir.prototype.hasLocal = function(key) {
     return this.cache.hasOwnProperty(key);
 };
 
-// TODO: Add other ES6 Map methods: items, forEach, iterator, delete, clear, toString, and the property size
+CacheDir.prototype.delete = function(key, callback) {
+    delete this.cache[key];
+    var keyFile = this.keyPath(key);
+    fs.exists(keyFile, function(exists) {
+        if (exists) {
+            fs.unlink(keyFile, callback);
+        } else {
+            callback();
+        }
+    });
+};
+
+CacheDir.prototype.deleteLocal = function(key) {
+    delete this.cache[key];
+};
+
+// TODO: Add other ES6 Map methods: items, forEach, iterator, clear, toString, and the property size
 
 module.exports = CacheDir;

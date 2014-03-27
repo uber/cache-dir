@@ -203,6 +203,51 @@ test('hasLocal', function(assert) {
     assert.end();
 });
 
+test('delete', function(assert) {
+    assert.plan(4);
+    var cache = createCache();
+    cache.set('toDelete', 'deleteMe', function(err) {
+        assert.ifError(err, 'should not get an error here');
+        cache.delete('toDelete', function(err) {
+            assert.ifError(err, 'should not get an error here');
+            assert.equal(cache.hasLocal('toDelete'), false, 'does not have the key locally');
+            cache.has('toDelete', function(has) {
+                assert.equal(has, false, 'does not have the key in filesystem');
+                assert.end();
+            });
+        });
+    });
+});
+
+test('delete nonexistent', function(assert) {
+    assert.plan(3);
+    var cache = createCache();
+    cache.has('nonexistent', function(has) {
+        assert.equal(has, false, 'does not have the key in filesystem');
+        cache.delete('nonexistent', function(err) {
+            assert.ifError(err, 'should not get an error here');
+            cache.has('nonexistent', function(has) {
+                assert.equal(has, false, 'still does not have the key in filesystem');
+                assert.end();
+            });
+        });
+    });
+});
+
+test('deleteLocal', function(assert) {
+    assert.plan(3);
+    var cache = createCache();
+    cache.set('toDelete', 'deleteMeLocally', function(err) {
+        assert.ifError(err, 'should not get an error here');
+        cache.deleteLocal('toDelete');
+        assert.equal(cache.hasLocal('toDelete'), false, 'does not have key locally');
+        cache.has('toDelete', function(has) {
+            assert.equal(has, true, 'does have the key in filesystem');
+            assert.end();
+        });
+    });
+});
+
 test('clearAgain', function (assert) {
     exec('rm -rf ' + path.join(__dirname, 'cacheTest'), function() {
         assert.end();
